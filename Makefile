@@ -17,9 +17,9 @@ BASE_TAG=jandelgado/raspi-docker-crosscompile
 #all: image.amd64 image.arm32v7 image.arm64v8
 all: image.arm64v8
 
-image.arm64v8: BASE = arm64v8/debian:buster-slim
-image.arm64v8: TAG = arm64v8
-image.arm64v8: image
+image-arm64v8: BASE = arm64v8/debian:buster-slim
+image-arm64v8: TAG = arm64v8
+image-arm64v8: image
 
 # image.arm32v7: BASE = arm32v7/debian:jessie-slim
 # image.arm32v7: TAG= arm32v7
@@ -39,9 +39,9 @@ shell-arm64v8: run-arm64v8
 
 make-arm64v8: CMD=/usr/bin/make
 make-arm64v8: run-arm64v8
-
+DOCKER_TERM_OPTS := -ti
 run-arm64v8:
-	docker run --rm -ti \
+	@docker run --rm $(DOCKER_TERM_OPTS) \
 		       --user $(shell id -u):$(shell id -g) \
 			   -w /workdir \
 			   -v $(PWD)/workdir:/workdir:z \

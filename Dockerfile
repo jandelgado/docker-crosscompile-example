@@ -13,6 +13,7 @@ RUN apk update && apk add curl \
     curl -L https://github.com/multiarch/qemu-user-static/releases/download/v${QEMU_VERSION}/x86_64_qemu-${arch}-static.tar.gz \
         | tar zxvf - -C /usr/bin; done \
  && chmod +x /usr/bin/qemu-*
+
 FROM $BASE
 MAINTAINER "Jan Delgado <jdelgado@gmx.net>"
 

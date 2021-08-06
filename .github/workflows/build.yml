@@ -1,0 +1,39 @@
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+name: run tests
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Info
+        run: docker version
+      - name: Prepare docker
+        run: |-
+          mkdir -p $HOME/.docker
+          #echo '{ "experimental" : "enabled" }' > $HOME/.docker/config
+          docker run --privileged --rm docker/binfmt:a7996909642ee92942dcd6cff44b9b95f08dad64
+          #docker run --rm --privileged multiarch/qemu-user-static:register --reset
+      - name: Build image
+        run: make image-arm64v8
+      - name: Build binary
+        run: make make-arm64v8 DOCKER_TERM_OPTS="-i"
+      - name: Test binary architecture
+        run: |-
+          INFO=$(file ./workdir/hello)
+          echo $INFO | grep -q "ELF 64-bit LSB shared object, ARM aarch64" ||\
+            { echo "ASSERT failed: binary not ARM aarch64"; exit 2; }
+      - name: Test execute binary in container
+        run: |-
+          OUTPUT=$(make shell-arm64v8 DOCKER_TERM_OPTS="-i" OPTS="-c ./hello")
+          EXPECTED='hello, arm64v8 world!'
+          [  "$EXPECTED" == "$OUTPUT" ] || \
+             { echo "ASSERT failed: expected '$EXPECTED' but got '$OUTPUT'"; exit 1; }
+
