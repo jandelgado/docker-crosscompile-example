@@ -1,5 +1,7 @@
 # Cross compile for the Raspberry using docker/qemu
 
+[![run tests](https://github.com/jandelgado/docker-crosscompile-example/actions/workflows/build.yml/badge.svg)](https://github.com/jandelgado/docker-crosscompile-example/actions/workflows/build.yml)
+
 By using docker and qemu it is easy to use all libraries as-is, without the
 need to recompile all dependencies. Just use the package manager of the base
 image (here: arm64v8/debian:buster-slim).
@@ -23,7 +25,7 @@ $ make make-arm64v8         # build inside the docker image, mount workdir
 docker run --rm -ti \
 	       --user 1000:1000 \
 		   -w /workdir \
-		   -v /home/paco/src/raspi-docker-crosscompile/workdir:/workdir:z \
+		   -v /home/jandelgado/src/raspi-docker-crosscompile/workdir:/workdir:z \
 		   --entrypoint "/usr/bin/make"\
 		   jandelgado/raspi-docker-crosscompile-linux-arm64v8 \
 		   
@@ -42,7 +44,7 @@ $ make shell-arm64v8
 docker run --rm -ti \
 	       --user 1000:1000 \
 		   -w /workdir \
-		   -v /home/paco/src/raspi-docker-crosscompile/workdir:/workdir:z \
+		   -v /home/jandelgado/src/raspi-docker-crosscompile/workdir:/workdir:z \
 		   --entrypoint "/bin/bash"\
 		   jandelgado/raspi-docker-crosscompile-linux-arm64v8 \
 		   
